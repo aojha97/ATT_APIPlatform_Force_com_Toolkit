@@ -1,0 +1,157 @@
+<apex:page controller="DemoSMSController">
+    <apex:composition template="demo_page_template">
+	    <apex:define name="pageHeader">
+		    <apex:sectionHeader title="AT&T Demo" subtitle="AT&T SMS Demo" />
+	    </apex:define>
+
+	    <apex:define name="pageBody">
+	        <apex:pageBlock title="Send SMS" id="sendSmsBlock">
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!testAttServiceSMSSend}"
+	                    rerender="smsId, sendSmsBlock, getStatusBlock, getInboxBlock" value="Send message" />
+	            </apex:pageBlockButtons>
+	
+	            <apex:pageMessages rendered="{!isSendErrorsVisible}"></apex:pageMessages>
+	
+	            <apex:pageBlockSection showHeader="false" columns="2" id="block1">
+	                <apex:pageBlockSectionItem >
+	                    <apex:panelGrid columns="2" id="resultPanel">
+	
+	                        <apex:outputLabel for="phoneNumber" value="Phone number: " />
+	                        <apex:panelGrid columns="2" id="phoneNumberPanel">
+	                            <apex:inputText id="phoneNumber" value="{!phoneNumber}" />
+	                        </apex:panelGrid>
+	
+	                        <apex:outputLabel value="SMS text " />
+	                        <apex:inputTextarea value="{!messageText}" cols="80" rows="10" />
+	
+	                        <apex:outputLabel value="SMS ID " />
+	                        <apex:inputText disabled="true" value="{!answerSMSSend.Id}"
+	                            size="80" id="answerSmsId" />
+	
+	                        <apex:outputLabel value="Resource URL " />
+	                        <apex:inputText disabled="true"
+	                            value="{!answerSMSSend.ResourceURL}" size="80"
+	                            id="resourceUrl" />
+	                    </apex:panelGrid>
+	                </apex:pageBlockSectionItem>
+	
+	                <apex:pageBlockSectionItem >
+	                    <apex:inputTextarea value="{!sendSmsDebugBody}" cols="80" rows="10"
+	                         id="smsdebug" style="margin-top:40px" disabled="true"/>
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	
+	        </apex:pageBlock>
+	        <apex:pageBlock title="Get SMS Status" id="getStatusBlock">
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!testAttServiceSMSCheckStatus}"
+	                    id="getMessageStatus" value="Get message status" />
+	            </apex:pageBlockButtons>
+	
+	            <apex:pageMessages rendered="{!isGetStatusErrorsVisible}"></apex:pageMessages>
+	
+	            <apex:pageBlockSection showHeader="false" columns="2" id="block2">
+	                <apex:pageBlockSectionItem >
+	                    <apex:panelGrid columns="2" id="resultPanel">
+	
+	                        <apex:panelGrid columns="2" id="smsIdPanel">
+	                            <apex:outputLabel for="id" value="SMS ID " />
+	                            <apex:inputText id="smsId" value="{!smsId}" size="80" />
+	
+	                            <apex:outputLabel for="deliveryTable" value="Delivery info list " />
+	                            <apex:dataTable value="{!deliveryInfoList}" var="list"
+	                                id="deliveryTable" cellpadding="5" border="1" width="471"
+	                                rendered="{!isStatusTableVisible}">
+	                                <apex:column >
+	                                    <apex:facet name="header">Id</apex:facet>
+	                                    <apex:outputText value="{!list.Id}" />
+	                                </apex:column>
+	                                <apex:column >
+	                                    <apex:facet name="header">Phone number</apex:facet>
+	                                    <apex:outputText value="{!list.Address}" />
+	                                </apex:column>
+	                                <apex:column >
+	                                    <apex:facet name="header">Delivery status</apex:facet>
+	                                    <apex:outputText value="{!list.DeliveryStatus}" />
+	                                </apex:column>
+	                            </apex:dataTable>
+	                        </apex:panelGrid>
+	
+	                    </apex:panelGrid>
+	                </apex:pageBlockSectionItem>
+	
+	                <apex:pageBlockSectionItem >
+	                    <apex:inputTextarea id="msg3" value="{!deliveryDebugBody}"
+	                        cols="80" rows="10" disabled="true" />
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>
+	
+	        <apex:pageBlock title="Get Inbox" id="getInboxBlock">
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!testAttServiceSMSInbox}" id="getInbox"
+	                    value="Get my inbox" />
+	            </apex:pageBlockButtons>
+	            
+	            <apex:pageMessages rendered="{!isInboxErrorsVisible}"></apex:pageMessages>
+	            
+	             <apex:outputLabel value="Your short code is {!shortCode}" style="margin-left: 500px;"/>
+	            
+	            <apex:pageBlockSection showHeader="false" columns="2" id="block3">
+	                <apex:pageBlockSectionItem >
+	
+	                    <apex:panelGrid columns="2" id="resultInboxPanel">
+	                        <apex:outputLabel for="numberOfMessages"
+	                            value="Number of messages in the batch " />
+	                        <apex:inputText id="numberOfMessages" value="{!numberOfMessages}"
+	                            disabled="true" />
+	                        <apex:outputLabel for="numberOfPendingMessages"
+	                            value="Total number of pending messages" />
+	                        <apex:inputText id="numberOfPendingMessages"
+	                            value="{!numberOfPendingMessages}" disabled="true" />
+	                        <apex:outputLabel for="inboundSmsMessages"
+	                            value="Inbound SMS messages" />
+	
+	                        <apex:dataTable value="{!inboundMessageList}" var="list"
+	                            id="inboundSmsMessages" cellpadding="5" border="1"
+	                            rendered="{!isInboxTableVisible}" width="400">
+	                            <apex:column >
+	                                <apex:facet name="header">Message Id</apex:facet>
+	                                <apex:outputText value="{!list.MessageId}" />
+	                            </apex:column>
+	                            <apex:column >
+	                                <apex:facet name="header">Message</apex:facet>
+	                                <apex:outputText value="{!list.Message}" />
+	                            </apex:column>
+	                            <apex:column >
+	                                <apex:facet name="header">Phone number</apex:facet>
+	                                <apex:outputText value="{!list.SenderAddress}" />
+	                            </apex:column>
+	                        </apex:dataTable>
+	                    </apex:panelGrid>
+	
+	                </apex:pageBlockSectionItem>
+	
+	                <apex:pageBlockSectionItem >
+	                    <apex:inputTextarea id="msg4" value="{!inboxDebugBody}" cols="80"
+	                        rows="10" disabled="true" />
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>
+	        <!--
+	        <apex:pageBlock title="Get Inbox By Callback" id="getInboxCallback">
+	             <apex:actionPoller reRender="rm" action="{!SMSCallback}" interval="5" />
+	             <apex:outputLabel value="{!messageText}" style="margin-left: 500px;" id="rm"/>
+	            
+	            <apex:pageBlockSection showHeader="false" columns="1" id="block3">
+	                <apex:pageBlockSectionItem >
+	
+	                    
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>
+	        -->
+		</apex:define>
+	</apex:composition>
+</apex:page>

@@ -1,0 +1,242 @@
+<apex:page controller="DemoSubscriptionHistoryController">
+  <apex:sectionHeader title="AT&T Demo" subtitle="AT&T Subscription History Demo" />
+
+    <apex:form >
+        <apex:pageMessages rendered="{!isGetStatusErrorsVisible}" />
+        <apex:commandLink value="<<Back to
+                Store" action="{!redirectToStore}" />
+            <apex:pageBlock title="Your Order History" id="orderHistoryBlock">
+                <apex:pageBlockSection showHeader="false" columns="1" id="block1">
+                    <apex:pageBlockSectionItem >
+
+
+                        <apex:dataTable value="{!historyList}" var="historyItem"
+                            width="60%" cellpadding="2">
+                            <apex:column >
+                                <apex:facet name="header">Product</apex:facet>
+                                <apex:commandLink value="{!historyItem.Product__c}"
+                                    style="font-size: 12px; font-weight: bold; color:#174a6f;"
+                                    action="{!getSubscriptiontStatus}">
+                                    <apex:param value="{!historyItem.MerchantTransactionID__c}"
+                                        assignTo="{!chosenTransactionId}" name="transationId" />
+                                </apex:commandLink>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Details</apex:facet>
+                                <apex:commandLink value="Get details"
+                                    style="font-size: 12px; font-weight: bold; color:#174a6f;"
+                                    action="{!getSubscriptiontDetails}">
+                                    <apex:param value="{!historyItem.ConsumerID__c}"
+                                        assignTo="{!chosenConsumerId}" name="transationId" />
+                                    <apex:param value="{!historyItem.MerchantSubscriptionIdList__c}"
+                                        assignTo="{!chosenMerchantSubscriptionIdList}" name="nSubIdList" />
+                                </apex:commandLink>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Refund Subscription</apex:facet>
+                                <apex:commandLink value="Refund" action="{!showRefundPopup}" rendered="{!!historyItem.Refunded__c}"
+                                    style="font-size: 12px; font-weight: bold; color:#174a6f;">
+                                    <apex:param value="{!historyItem.SubscriptionId__c}"
+                                        assignTo="{!chosenSubscriptionId}" name="subscriptionId" />
+                                </apex:commandLink>
+                                <apex:outputText value="Refunded" rendered="{!historyItem.Refunded__c}" />    
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Subscription Date</apex:facet>
+                                <apex:outputText value="{!historyItem.SubscriptionDate__c}"
+                                    style="font-size: 12px; font-weight: bold;" />
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Price</apex:facet>
+                                <apex:outputText value="${!historyItem.Price__c}"
+                                    style="font-size: 12px; font-weight: bold;" />
+                            </apex:column>
+                        </apex:dataTable>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >
+
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="popup">
+                
+                <apex:outputPanel layout="block" rendered="{!displayPopUp}" styleClass="popupBack" />
+
+                <apex:outputPanel layout="block" rendered="{!displayPopUp}" styleClass="popupStyle">
+                    <apex:outputText value="Status"
+                        style="font-size: 18px; font-weight: bold; color: grey; margin-left:160px; padding-top:50px" />
+
+                    <apex:panelGrid columns="2" id="resultPanel" style="margin-top:20px;">
+                        
+                        <apex:outputLabel value="Channel" />
+                        <apex:inputText value="{!answerPaymentStatus.Channel}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Description" />
+                        <apex:inputText value="{!answerPaymentStatus.Description}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription currency" />
+                        <apex:inputText value="{!answerPaymentStatus.SubscriptionCurrency}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription type" />
+                        <apex:inputText value="{!getStatSubscriptionType}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription status" />
+                        <apex:inputText value="{!getStatSubscriptionStatus}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Consumer ID" />
+                        <apex:inputText value="{!answerPaymentStatus.ConsumerId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Merchant transaction ID" />
+                        <apex:inputText value="{!answerPaymentStatus.MerchantTransactionId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Merchant application ID" />
+                        <apex:inputText value="{!answerPaymentStatus.MerchantApplicationId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription ID" />
+                        <apex:inputText value="{!answerPaymentStatus.SubscriptionId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Original subscription ID" />
+                        <apex:inputText value="{!answerPaymentStatus.OriginalTransactionId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Content category" />
+                        <apex:inputText value="{!getStatContentCategory}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Merchant product ID" />
+                        <apex:inputText value="{!answerPaymentStatus.MerchantProductId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Merchant ID" />
+                        <apex:inputText value="{!answerPaymentStatus.MerchantId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Merchant subscription ID" />
+                        <apex:inputText value="{!answerPaymentStatus.MerchantSubscriptionId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription period amount" />
+                        <apex:inputText value="{!answerPaymentStatus.SubscriptionPeriodAmount}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription recurrences" />
+                        <apex:inputText value="{!answerPaymentStatus.SubscriptionRecurrences}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription period" />
+                        <apex:inputText value="{!answerPaymentStatus.SubscriptionPeriod}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Version" />
+                        <apex:inputText value="{!answerPaymentStatus.Version}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Success" />
+                        <apex:inputText value="{!getStatIsSuccess}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Auto committed" />
+                        <apex:inputText value="{!answerPaymentStatus.IsAutoCommitted}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Amount" />
+                        <apex:inputText value="{!getStatAmount}" size="48" disabled="true" />
+                        
+                    </apex:panelGrid>                   
+
+                    <apex:commandButton value="Close" action="{!closePopup}"
+                        rerender="popup" style="margin-left:220px; margin-top:30px" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <apex:outputPanel id="popupDetails">
+                
+                <apex:outputPanel layout="block" rendered="{!displayDetailsPopUp}"
+                    styleClass="popupBack" />
+
+                <apex:outputPanel layout="block" rendered="{!displayDetailsPopUp}" styleClass="popupStyle">
+                    <apex:outputText value="Subscription Details"
+                        style="font-size: 18px; font-weight: bold; color: grey; margin-left:160px; padding-top:50px" />
+
+                    <apex:panelGrid columns="2" id="detailsPanel" style="margin-top:20px;">
+                        
+                        <apex:outputLabel value="Subscription currency" />
+                        <apex:inputText value="{!subscriptionDetails.SubscriptionCurrency}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription status" />
+                        <apex:inputText value="{!subscriptionDetails.Status}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Creation date" />
+                        <apex:inputText value="{!detailsCreationDate}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Gross amount" />
+                        <apex:inputText value="{!detailsGrossAmount}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription recurrences" />
+                        <apex:inputText value="{!detailsSubscriptionRecurrences}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Active subscription" />
+                        <apex:inputText value="{!detailsIsActiveSubscription}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Current start date" />
+                        <apex:inputText value="{!detailsCurrentStartDate}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Current end date" />
+                        <apex:inputText value="{!detailsCurrentEndDate}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription remaining" />
+                        <apex:inputText value="{!detailsSubscriptionRemaining}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Version" />
+                        <apex:inputText value="{!subscriptionDetails.Version}" size="40" disabled="true" />
+                        
+                        <apex:outputLabel value="Success" />
+                        <apex:inputText value="{!detailsIsSuccess}" size="40" disabled="true" />
+                        
+                    </apex:panelGrid>                   
+
+                    <apex:commandButton value="Close" action="{!closeDetailsPopup}"
+                        rerender="popupDetails" style="margin-left:220px; margin-top:30px" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <apex:outputPanel id="refundPopup">
+                <apex:outputPanel layout="block" rendered="{!displayRefundPopup}"
+                    style="background-color:black; opacity: 0.20; filter: alpha(opacity = 20); position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 9998;" />
+
+                <apex:outputPanel layout="block" rendered="{!displayRefundPopup}"
+                    style="background-color: white; border: 2px solid #1797C0;border-radius: 5px; z-index: 9999; left: 50%; padding:10px; position: absolute; width: 500px; margin-left: -250px; top:100px;">
+                    <apex:outputText value="Refund Subscription"
+                        style="font-size: 18px; font-weight: bold; color: grey; margin-left:160px; padding-top:50px" />
+                    <apex:pageMessages rendered="{!isGetRefundErrorsVisible}"></apex:pageMessages>
+
+                    <apex:panelGrid columns="2" id="refundPanel"
+                        style="margin-left:20px; margin-top:20px;">
+
+                        <apex:outputLabel value="Refund reason" />
+                        <apex:inputTextarea value="{!refundReason}" cols="48" rows="5"/>
+                        
+                        <apex:outputLabel value="Subscription ID" />
+                        <apex:inputText value="{!refundTransactionStatus.TransactionId}" size="48" disabled="true"/>
+                        
+                        <apex:outputLabel value="Subscription status" />
+                        <apex:inputText value="{!refundTransactionStatus.TransactionStatus}" size="48" disabled="true"/>
+                        
+                        <apex:outputLabel value="Original purchase amount" />
+                        <apex:inputText value="{!refundOriginalPurchaseAmount}" size="48" disabled="true"/>
+                        
+                        <apex:outputLabel value="Commit confirmation ID" />
+                        <apex:inputText value="{!refundTransactionStatus.CommitConfirmationId}" size="48" disabled="true"/>
+                        
+                        <apex:outputLabel value="Version" />
+                        <apex:inputText value="{!refundTransactionStatus.Version}" size="48" disabled="true"/>
+                        
+                        <apex:outputLabel value="Subscription success" />
+                        <apex:inputText value="{!refundIsSuccess}" size="48" disabled="true"/>
+
+                    </apex:panelGrid>
+
+                    <apex:commandButton value="Refund" action="{!refundTransaction}" disabled="{!refundTransactionStatus.IsSuccess}"
+                        style="margin-left:200px; margin-top:30px" />
+                    <apex:commandButton value="Close" action="{!closeRefundPopup}"
+                        rerender="refundPopup" style="margin-left:10px; margin-top:30px" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+            
+    </apex:form>
+    <style type="text/css">
+    .popupBack{background-color:black; opacity: 0.20; filter: alpha(opacity = 20); position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 9998;}    
+    .popupStyle{background-color: white; border: 2px solid #1797C0;border-radius: 5px; z-index: 9999; left: 50%; padding:10px; position: absolute; width: 500px; margin-left: -250px; top:100px;}
+    </style>
+</apex:page>

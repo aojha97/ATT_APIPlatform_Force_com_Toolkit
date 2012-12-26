@@ -1,0 +1,28 @@
+<apex:page controller="DemoSubscriptionController" action="{!addSubsAuthCode}">
+      <apex:sectionHeader title="AT&T Demo"
+        subtitle="AT&T Subscription Demo" />
+    <apex:form >
+        <apex:pageBlock title="Magazine Subscriptions" id="newSubscriptionBlock">
+            
+            <apex:pageMessages ></apex:pageMessages>
+            <apex:commandLink value="Your Order History" action="{!redirectToOrderHistory}"/>
+            <apex:dataTable value="{!magazinesList}" var="magazine" cellpadding="8">
+                <apex:column >
+                    <apex:image url="{!URLFOR($Resource.Cover, magazine.imageFileName)}"    height="180"/>
+                </apex:column>
+                <apex:column >
+                    <div style="width: 400px;">
+                        <apex:outputText value="{!magazine.name}" style="font-size: 15px; font-weight: bold;" />                        
+                    </div>
+                </apex:column>
+                <apex:column >
+                    <apex:outputText value="${!magazine.price}" style="font-size: 18px; font-weight: bold; color: grey;"/>
+                </apex:column>    
+                <apex:column >
+                    <apex:commandLink value="Subscribe"  action="{!magazine.subscribe}" style="width: 80px;"/>
+                </apex:column>
+            </apex:dataTable>         
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

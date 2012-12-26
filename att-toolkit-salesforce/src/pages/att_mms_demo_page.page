@@ -1,0 +1,134 @@
+<apex:page controller="DemoMMSController">
+	<apex:composition template="demo_page_template">
+		<apex:define name="pageHeader">
+		    <apex:sectionHeader title="AT&T Demo" subtitle="AT&T MMS Demo" />
+	    </apex:define>
+	    <apex:define name="pageBody">
+	        <apex:pageBlock title="Send MMS" id="sendMmsBlock">	            
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!testAttServiceMMSSend}"
+	                     value="Send message" />
+	            </apex:pageBlockButtons>
+	
+	            <apex:pageMessages rendered="{!isSendErrorsVisible}"></apex:pageMessages>
+	            <apex:pageBlockSection showHeader="false" columns="2" id="block1">
+	                <apex:pageBlockSectionItem >
+	                    <apex:panelGrid columns="2" id="resultPanel">
+	
+	                        <apex:outputLabel for="phoneNumber" value="Phone number: " />
+	                        <apex:panelGrid columns="2" id="phoneNumberPanel">
+	                            <apex:inputText id="phoneNumber" value="{!phoneNumber}" />
+	                        </apex:panelGrid>
+	
+	                        <apex:outputLabel value="MMS subject: " />
+	                        <apex:inputTextarea value="{!messageText}" cols="80" rows="10" />
+	
+	                        <apex:outputLabel value="MMS ID: " />
+	                        <apex:inputText disabled="true" value="{!answerMMSSend.id}"
+	                            size="80" id="answerMmsId" />
+	
+	                        <apex:outputLabel value="Resource URL: " />
+	                        <apex:inputText disabled="true"
+	                            value="{!answerMMSSend.resourceURL}" size="80"
+	                            id="resourceUrl" />
+	                            
+	                        <apex:outputLabel value="Attachments: "/>
+		                 	<apex:panelGrid columns="1">
+		                 		<apex:inputFile value="{!attachment1}" fileName="{!fileName1}" id="attachment1" onchange="document.getElementById('{!$Component.attachment2}').style.display = ''"/>
+		                 		<apex:inputFile value="{!attachment2}" fileName="{!fileName2}" id="attachment2" onchange="document.getElementById('{!$Component.attachment3}').style.display = ''"/>
+		                 		<apex:inputFile value="{!attachment3}" fileName="{!fileName3}" id="attachment3" onchange="document.getElementById('{!$Component.attachment4}').style.display = ''"/>
+		                 		<apex:inputFile value="{!attachment4}" fileName="{!fileName4}" id="attachment4"/>
+		                 	</apex:panelGrid>
+		                 	
+						    <apex:outputLabel value="Comments: " />
+						    <div>
+						    	The total size of MMS should be less than 600KB. It includes all attachments, message titles, etc.
+						    </div>
+						    
+						    <script language="javascript">
+		                 		document.getElementById('{!$Component.attachment2}').style.display = 'none';
+		                 		document.getElementById('{!$Component.attachment3}').style.display = 'none';
+		                 		document.getElementById('{!$Component.attachment4}').style.display = 'none';
+						    </script>
+	                    </apex:panelGrid>
+	                </apex:pageBlockSectionItem>
+	
+	                <apex:pageBlockSectionItem >
+	                    <apex:inputTextarea value="{!sendMmsDebugBody}" cols="80" rows="10"
+	                        id="mmsdebug" style="margin-top:40px" disabled="true"/>
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	
+	        </apex:pageBlock>
+	        
+	        <apex:pageBlock title="Check MMS Delivery Status" id="sendedMmsBlock">
+	        
+	        	<apex:pageMessages rendered="{!isGetStatusErrorsVisible}"></apex:pageMessages>
+	        	
+	        	<apex:pageBlockSection showHeader="true" columns="1">
+	        			            
+		            <apex:pageBlockSectionItem >
+		            	<apex:panelGrid columns="2" id="resultPanel">
+		            	
+		            		<apex:outputLabel for="sentMmsList" value="Sent MMS" style="width:140px; display: block;" />
+		            		<apex:pageBlockTable id="sentMmsList" value="{!sendedMMS}" var="elem"
+			                   style="width:600px;">
+			                    <apex:column >
+			                        <apex:facet name="header">ID</apex:facet>
+			                        <apex:outputText value="{!elem.Name}" />
+			                    </apex:column>
+			                    <apex:column >
+			                        <apex:facet name="header">Subject</apex:facet>
+			                        <apex:outputText value="{!elem.title__c}" />
+			                    </apex:column>
+			                    <apex:column >
+			                        <apex:facet name="header"></apex:facet>			                        
+			                        <apex:commandLink action="{!testDeliveryStatus}" value="Get message status" >
+			                        	<apex:param name="mmsId" assignTo="{!mmsForCheckId}" value="{!elem.Name}"  />
+				            		</apex:commandLink>
+			                    </apex:column>
+			                </apex:pageBlockTable>
+			                
+			                <apex:outputLabel value="" />
+			                <apex:commandButton action="{!clearSentMms}" value="Remove all"/>
+			            </apex:panelGrid>
+			       </apex:pageBlockSectionItem>	                
+	                
+	                
+	                  
+			        <apex:pageBlockSectionItem rendered="{!isStatusTableVisible}">
+		            	<apex:panelGrid columns="2" id="resultPanel">        
+		            	
+			            	<apex:outputLabel for="mmsId" value="MMS ID " style="width:140px; display: block;" />
+		                    <apex:inputText id="mmsId" value="{!deliveryCheckForMms.id}" size="80" disabled="true"/>
+		
+		                    <apex:outputLabel for="statusResourceUrl" value="Resource URL "/>
+		                    <apex:inputText id="statusResourceUrl" disabled="true" value="{!deliveryCheckForMms.resourceUrl}" size="80"/>
+		                    
+		                    <apex:outputLabel for="deliveryTable" value="Delivery info list "/>
+		                    <apex:pageBlockTable value="{!deliveryStatus.deliveryInfoList}" var="list"
+		                        id="deliveryTable" style="width:600px;">
+		                        <apex:column >
+		                            <apex:facet name="header">Id</apex:facet>
+		                            <apex:outputText value="{!list.id}" />
+		                        </apex:column>
+		                        <apex:column >
+		                            <apex:facet name="header">Phone number</apex:facet>
+		                            <apex:outputText value="{!list.address}" />
+		                        </apex:column>
+		                        <apex:column >
+		                            <apex:facet name="header">Delivery Status</apex:facet>
+		                            <apex:outputText value="{!list.deliveryStatus}" />
+		                        </apex:column>
+		                    </apex:pageBlockTable>
+			            	                    	
+	                	</apex:panelGrid>    	
+	                	
+	                </apex:pageBlockSectionItem>
+	                
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>
+	        
+		</apex:define>
+	</apex:composition>
+</apex:page>

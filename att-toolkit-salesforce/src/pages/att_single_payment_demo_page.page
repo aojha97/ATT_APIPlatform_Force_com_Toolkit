@@ -1,0 +1,33 @@
+<apex:page controller="DemoPaymentController" action="{!addTransactionCode}">
+<apex:sectionHeader title="AT&T Demo"
+        subtitle="AT&T Single Payment Demo" />
+    <apex:form >
+         <apex:pageBlock title="Book Store" id="newTransactionBlock">
+            
+            <apex:pageMessages ></apex:pageMessages>
+            <apex:commandLink value="Your Order History" action="{!redirectToOrderHistory}"/>
+            <apex:dataTable value="{!books}" var="book" cellpadding="8">
+                <apex:column >
+                    <apex:image url="{!URLFOR($Resource.Cover, book.imageFileName)}"    height="180"/>
+                </apex:column>
+                <apex:column >
+                    <div style="width: 600px;">
+                        <apex:outputText value="{!book.name}" style="font-size: 15px; font-weight: bold; width:300px;" />
+                        <br></br> <br></br>
+                        <apex:outputText value="{!book.author}" />
+                    </div>
+                </apex:column>
+                <apex:column >
+                    <apex:outputText value="${!book.price}" style="font-size: 18px; font-weight: bold; color: grey;"/>
+                </apex:column>    
+                <apex:column >
+                    <apex:commandLink value="Buy"  action="{!buyBook}" style="width: 80px;">
+                        <apex:param value="{!book.productId}" assignTo="{!chosenBookId}" name="idBook" />
+                    </apex:commandLink>
+                </apex:column>
+            </apex:dataTable>
+            
+        </apex:pageBlock>
+        
+    </apex:form>    
+</apex:page>

@@ -1,0 +1,157 @@
+<apex:page controller="DemoPaymentNotificationController">
+  <apex:sectionHeader title="AT&T Demo" subtitle="AT&T Notification Payment Demo" />
+
+    <apex:form >
+        <apex:pageMessages />
+        
+            <apex:pageBlock title="Notifications" id="orderHistoryBlock">
+                <apex:pageBlockSection showHeader="false" columns="1" id="block1">
+                    <apex:pageBlockSectionItem >
+
+
+                        <apex:dataTable value="{!idList}" var="idItem"
+                            width="60%" cellpadding="2">
+                            <apex:column >
+                                <apex:facet name="header">Notification ID</apex:facet>
+                                <apex:outputText value="{!idItem.NotificationId__c}"
+                                    style="font-size: 12px; font-weight: bold;">
+                                </apex:outputText>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Date</apex:facet>
+                                <apex:outputText value="{!idItem.CreatedDate}"
+                                    style="font-size: 12px; font-weight: bold;" />
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Notification</apex:facet>
+                                <apex:commandLink value="Get Notification"
+                                    style="font-size: 12px; font-weight: bold; color:#174a6f;"
+                                    action="{!getNotification}">
+                                    <apex:param value="{!idItem.NotificationId__c}"
+                                        assignTo="{!chosenId}" name="Id1" />                                    
+                                </apex:commandLink>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Acknowledge Notification</apex:facet>
+                                <apex:commandLink value="Acknowledge" action="{!acknowledgeNotification}"
+                                    style="font-size: 12px; font-weight: bold; color:#174a6f;">
+                                    <apex:param value="{!idItem.NotificationId__c}"
+                                        assignTo="{!chosenId}" name="Id3" />
+                                </apex:commandLink>                                 
+                            </apex:column>
+                        </apex:dataTable>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:pageBlockSectionItem >                        
+                            <apex:inputTextarea value="{!debug}" cols="80" rows="10"
+                             id="debug" style="margin-top:40px" disabled="true" rendered="false"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+
+            <apex:outputPanel id="popup">
+                
+                <apex:outputPanel layout="block" rendered="{!displayPopUp}" styleClass="popupBack" />
+
+                <apex:outputPanel layout="block" rendered="{!displayPopUp}" styleClass="popupStyle">
+                
+                 <apex:outputPanel id="getNotif" rendered="{!isGetNotificationRequest}">
+                 
+                    <apex:outputText value="Transaction Status"
+                        style="font-size: 18px; font-weight: bold; color: grey; margin-left:160px; padding-top:50px" />
+
+                    <apex:panelGrid columns="2" id="resultPanel" style="margin-top:20px;">
+                        
+                        <apex:outputLabel value="Notification type" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.NotificationType}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Transaction date" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.TransactionDate}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Original transaction Id" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.OriginalTransactionId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Consumer Id" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.ConsumerId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Refund price amount" />
+                        <apex:inputText value="{!RefundPriceAmount}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Refund currency" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.RefundCurrency}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Refund reason Id" />
+                        <apex:inputText value="{!RefundReasonId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Refund free text" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.RefundFreeText}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Refund transaction Id" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.RefundTransactionId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Merchant subscription Id" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.MerchantSubscriptionId}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Original price amount" />
+                        <apex:inputText value="{!OriginalPriceAmount}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Current period start date" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.CurrentPeriodStartDate}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Current periodу end date" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.CurrentPeriodEndDate}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription period amount" />
+                        <apex:inputText value="{!SubscriptionPeriodAmount}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription period" />
+                        <apex:inputText value="{!SubscriptionPeriod}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription recurrences" />
+                        <apex:inputText value="{!notificationDetails.GetNotificationResponse.SubscriptionRecurrences}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Subscription Remaining" />
+                        <apex:inputText value="{!SubscriptionRemaining}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Version" />
+                        <apex:inputText value="{!version}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Is success" />
+                        <apex:inputText value="{!isGettingSuccess}" size="48" disabled="true" />
+                        
+                    </apex:panelGrid>                   
+                    
+                    </apex:outputPanel>
+                    
+                    
+                    <apex:outputPanel id="acknowPanel" rendered="{!!isGetNotificationRequest}">
+                 
+                    <apex:outputText value="Acknowledge status"
+                        style="font-size: 18px; font-weight: bold; color: grey; margin-left:160px; padding-top:50px" />
+
+                    <apex:panelGrid columns="2" id="acknowResultPanel" style="margin-top:20px;">
+                        
+                        <apex:outputLabel value="Version" />
+                        <apex:inputText value="{!notificationDetails.Version}" size="48" disabled="true" />
+                        
+                        <apex:outputLabel value="Is success" />
+                        <apex:inputText value="{!isGettingSuccess}" size="48" disabled="true" />
+                        
+                    </apex:panelGrid>                   
+                    
+                    </apex:outputPanel>
+                    
+                    
+                    <apex:commandButton value="Close" action="{!closePopup}"
+                        rerender="popup" style="margin-left:220px; margin-top:30px" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+            
+            
+            
+    </apex:form>
+    <style type="text/css">
+    .popupBack{background-color:black; opacity: 0.20; filter: alpha(opacity = 20); position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 9998;}    
+    .popupStyle{background-color: white; border: 2px solid #1797C0;border-radius: 5px; z-index: 9999; left: 50%; padding:10px; position: absolute; width: 500px; margin-left: -250px; top:100px;}
+    </style>
+</apex:page>

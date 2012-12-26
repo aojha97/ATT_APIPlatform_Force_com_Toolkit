@@ -1,0 +1,26 @@
+<apex:page >
+	<style>
+		.pageHeaderCol1 {
+			text-align: left;
+	   	}
+		.pageHeaderCol2 {
+			text-align: right;
+	   	}
+	</style>
+	
+	<apex:insert name="pageStyle"/>
+
+	<apex:panelGrid style="width: 100%;" columnClasses="pageHeaderCol1,pageHeaderCol2" columns="2">
+		<apex:insert name="pageHeader"/>
+    
+	    <apex:insert name="revisionInfo">
+	    	<apex:outputText style="font-weight: bold; font-style: italic;" value="r---"/>
+	    </apex:insert>
+	</apex:panelGrid>
+  
+  	<apex:insert name="pageForm">
+	    <apex:form >
+			<apex:insert name="pageBody"/>
+	    </apex:form>
+	</apex:insert>
+</apex:page>

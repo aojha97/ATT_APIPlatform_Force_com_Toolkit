@@ -1,0 +1,46 @@
+<apex:page controller="DemoLocationController">
+	<apex:composition template="demo_page_template">
+	    <apex:define name="pageHeader">
+	    	<apex:sectionHeader title="AT&T Demo" subtitle="AT&T Location Demo"/>
+	    </apex:define>
+
+	    <apex:define name="pageBody">
+	        <apex:pageBlock title="Send Request to Location Service">
+	            <apex:pageBlockButtons >
+                	<apex:commandButton action="{!invokeService}" value="Get Location"/>                	
+	            </apex:pageBlockButtons>
+	
+	            <apex:pageMessages />
+	            
+	            <apex:pageBlockSection showHeader="false">
+	           		<apex:pageBlockSectionItem >
+	           			<apex:panelGrid columns="2">
+            
+			            	<apex:outputLabel value="Requested accuracy (0 - 20000):" style="white-space: nowrap"/>
+			                <apex:inputText value="{!requestedAccuracy}" size="5" maxlength="5"/>
+			          		
+			          		<apex:outputLabel value="Acceptable accuracy:" style="white-space: nowrap"/>
+			                <apex:inputText value="{!acceptableAccuracy}" size="5" maxlength="5"/>
+			                
+			          		<apex:outputLabel value="Delay tolerance:" style="white-space: nowrap"/>
+			          		<apex:selectRadio value="{!tolerance}">
+			          			<apex:selectOptions value="{!toleranceOptions}"/>
+			          		</apex:selectRadio>
+			          		
+			          		<apex:outputLabel value="Service type:" style="white-space: nowrap"/>
+			          		<apex:selectRadio value="{!serviceType}" style="white-space: nowrap" layout="pageDirection">
+			          			<apex:selectOptions value="{!serviceOptions}"/>
+			          		</apex:selectRadio>
+			          		
+			          		<apex:outputLabel rendered="{!showResult}" value="Location:" style="white-space: nowrap"/>
+			          		<apex:inputTextArea rendered="{!showResult}" disabled="true" value="{!location}" rows="5" style="width: 595px;"/>			                
+			                
+			                <apex:outputLabel value=""/>
+							<apex:iframe rendered="{!showResult}" src="http://maps.google.com/?q={!latitude}+{!longitude}&output=embed" width="600" height="400" frameborder="0" scrolling="no"/>
+			            </apex:panelGrid>
+	           		</apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>
+	    </apex:define>
+    </apex:composition>
+</apex:page>

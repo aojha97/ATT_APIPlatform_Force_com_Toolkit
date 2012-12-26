@@ -1,0 +1,54 @@
+<apex:page controller="DemoWAPPushController">
+
+    <apex:composition template="demo_page_template">    
+	    <apex:define name="pageHeader">
+			<apex:sectionHeader title="AT&T Demo" subtitle="AT&T WAP Push Demo"/>
+	    </apex:define>
+	    
+	    
+	    <apex:define name="pageBody">
+	    
+	        <apex:pageBlock title="Send Request to AT&T WAP Push Service">        	
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!sendWAPPush}" value="Send message"/>
+	            </apex:pageBlockButtons>
+	
+	            <apex:pageMessages />
+
+	            <apex:pageBlockSection showHeader="false">            	
+		           	<apex:panelGrid columns="2"> 
+		               	<apex:outputLabel value="Phone numbers:" style="white-space: nowrap;"/>
+						<apex:panelGrid columns="2">
+				        	<apex:inputText value="{!phone}" maxlength="15"/>
+				            <apex:commandButton action="{!addNumber}" value="Add" title="Add number to list"/>
+				            	
+				            <apex:outputpanel id="numbers">	
+					            <apex:repeat value="{!phoneNumbers}" var="number">
+					            	<apex:outputpanel id="removePanel">
+							           	<apex:image url="{!$Resource.ImgRemoveItem}" width="12" height="12" title="Remove '{!number}' number"/>
+										<apex:actionSupport event="onclick" action="{!removeNumber}" rerender="numbers">
+											<apex:param name="num" value="{!number}" assignTo="{!phone}"/>
+										</apex:actionSupport>
+									</apex:outputpanel>																				            			
+			        				<apex:outputText value="{!number}" style="padding-left: 5px;"/><br/>
+		    					</apex:repeat>
+	    					</apex:outputpanel>
+	    					<apex:outputLabel value=""/>
+	    					
+				            <apex:commandButton action="{!clearNumbers}" value="Remove all" title="Remove all numbers from list"/>
+						</apex:panelGrid>
+		               	
+		                <apex:outputLabel value="URL:"/>
+		               	<apex:inputTextArea value="{!url}" cols="100" rows="2"/>
+		               	
+		               	<apex:outputLabel value="Message body:" style="white-space: nowrap"/>
+	               		<apex:inputTextArea value="{!message}" cols="100" rows="5"/>
+		                	
+		               	<apex:outputLabel value="Message ID:" style="white-space: nowrap"/>
+		               	<apex:inputTextArea disabled="true" value="{!id}" cols="100" rows="1"/>
+		          	</apex:panelGrid>            	
+	            </apex:pageBlockSection>            
+	        </apex:pageBlock>      
+		</apex:define>
+	</apex:composition>
+</apex:page>

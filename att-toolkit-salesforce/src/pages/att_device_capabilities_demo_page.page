@@ -1,0 +1,71 @@
+<apex:page controller="DemoDeviceCapabilitiesController">
+  <apex:composition template="demo_page_template">
+            <apex:define name="pageHeader">
+                <apex:sectionHeader title="AT&T Demo" subtitle="AT&T Device Capabilities Demo"/>
+            </apex:define>
+
+            <apex:define name="pageBody">
+                <apex:pageBlock title="Send Request to AT&T Device Capabilities Service">
+                    <apex:pageBlockButtons >
+                        <apex:commandButton action="{!invokeService}" value="Get device capabilities"/>                      
+                    </apex:pageBlockButtons>
+        
+                    <apex:pageMessages />                     
+                    
+                    <apex:pageBlockSection showHeader="false" columns="2" id="block55">
+                    <apex:pageBlockSectionItem >
+    
+                        <apex:panelGrid columns="2" id="resultInboxPanel">
+                            <apex:outputLabel for="Code"
+                                value="Type allocation code" />
+                            <apex:inputText id="Code" value="{!devCapabilities.DeviceInfo.DeviceId.TypeAllocationCode}"
+                                disabled="true" />
+                            <apex:outputLabel for="Name"
+                                value="Name" />
+                            <apex:inputText id="Name"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.Name}" disabled="true" />
+                            <apex:outputLabel for="inboundSmsMessages"
+                                value="Vendor" />
+                            <apex:inputText id="Vendor"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.Vendor}" disabled="true" />
+                            <apex:outputLabel for="inboundSmsMessages"
+                                value="Model" />
+                            <apex:inputText id="Model"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.Model}" disabled="true" />                            
+                            <apex:outputLabel for="FirmwareVersion"
+                                value="Firmware version" />
+                            <apex:inputText id="FirmwareVersion" value="{!devCapabilities.DeviceInfo.Capabilities.FirmwareVersion}"
+                                disabled="true" />
+                            <apex:outputLabel for="UaProf"
+                                value="UA profile" />
+                            <apex:inputText id="UaProf"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.UaProf}" disabled="true" />
+                            <apex:outputLabel for="MmsCapable"
+                                value="MMS capable" />
+                            <apex:inputText id="MmsCapable"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.MmsCapable}" disabled="true" />
+                            <apex:outputLabel for="AssistedGps"
+                                value="Assisted GPS" />
+                            <apex:inputText id="AssistedGps"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.AssistedGps}" disabled="true" />
+                            
+                            <apex:outputLabel for="LocationTechnology" value="Location technology" />    
+                            <apex:inputText id="LocationTechnology"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.LocationTechnology}" disabled="true" />
+                            <apex:outputLabel for="DeviceBrowser" value="Device browser" />
+                            <apex:inputText id="DeviceBrowser"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.DeviceBrowser}" disabled="true" />
+                            <apex:outputLabel for="WapPushCapable" value="WAP Push capable" />
+                            <apex:inputText id="WapPushCapable"
+                                value="{!devCapabilities.DeviceInfo.Capabilities.WapPushCapable}" disabled="true" />       
+    
+                        </apex:panelGrid>
+    
+                    </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                    <apex:inputTextarea value="{!debug}" cols="80" rows="50"
+                             id="smsdebug" style="margin-top:40px" disabled="true" rendered="false"/>
+                </apex:pageBlock>
+            </apex:define>
+    </apex:composition>
+</apex:page>

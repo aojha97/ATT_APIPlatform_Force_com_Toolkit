@@ -1,0 +1,50 @@
+<apex:page controller="DemoMoboController">
+    <apex:sectionHeader title="AT&T Demo" subtitle="AT&T MOBO Demo"/>
+    <apex:form id="formTestMobo">
+        <apex:pageBlock title="Send Request To AT&T MOBO Service">
+        
+            <apex:pageBlockButtons >
+            	<apex:commandButton action="{!authorize}" value="Authorize" disabled="{!authorized}"/>
+                <apex:commandButton action="{!invokeService}" value="Send Message" disabled="{! not authorized}"/>
+            </apex:pageBlockButtons>
+
+            <apex:pageMessages />
+            
+            <apex:pageBlockSection showHeader="false">
+            	<apex:panelGrid columns="2">
+                 	<apex:outputLabel value="Address list:" style="white-space: nowrap"/>
+                 	<apex:inputText value="{!targetAddresses}" maxlength="320" size="84" disabled="{! not authorized}"/>
+                 	
+                 	<apex:outputLabel value="Group:"/>
+                 	<apex:inputCheckBox value="{!isGroup}" disabled="{! not authorized}"/>
+                 	
+                 	<apex:outputLabel value="Subject:"/>
+                 	<apex:inputTextArea value="{!subject}" cols="103" rows="5" disabled="{! not authorized}"/>
+                 	
+                 	<apex:outputLabel value="Message body:" style="white-space: nowrap"/>
+                 	<apex:inputTextArea value="{!messageBody}" cols="103" rows="10" disabled="{! not authorized}"/>
+                 	
+                 	<apex:outputLabel value="Attachments:"/>
+                 	<apex:panelGrid columns="1">
+                 		<apex:inputFile value="{!attachment1}" fileName="{!fileName1}" id="attachment1" onchange="document.getElementById('{!$Component.attachment3}').style.display = ''" disabled="{! not authorized}"/>
+                 		<apex:inputFile value="{!attachment2}" fileName="{!fileName2}" id="attachment2" onchange="document.getElementById('{!$Component.attachment3}').style.display = ''"/>
+                 		<apex:inputFile value="{!attachment3}" fileName="{!fileName3}" id="attachment3" onchange="document.getElementById('{!$Component.attachment4}').style.display = ''"/>
+                 		<apex:inputFile value="{!attachment4}" fileName="{!fileName4}" id="attachment4"/>
+                 	</apex:panelGrid>
+                 	
+				    <apex:outputLabel value="Comments:" />
+				    <div>
+				    	Total size of all attachments must be less then 600kb.
+				    </div>
+				    
+				    <script language="javascript">
+                 		document.getElementById('{!$Component.attachment2}').style.display = 'none';
+                 		document.getElementById('{!$Component.attachment3}').style.display = 'none';
+                 		document.getElementById('{!$Component.attachment4}').style.display = 'none';
+				    </script>
+            	</apex:panelGrid>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>      
+    </apex:form>
+</apex:page>

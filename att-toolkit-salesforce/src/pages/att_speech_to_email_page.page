@@ -1,0 +1,40 @@
+<apex:page controller="DemoSpeechToEmailController">
+    <apex:composition template="demo_page_template">
+	    <apex:define name="pageStyle">
+			<style>
+				.col1 {
+					width: 180px;
+			   	}
+				.col2 {
+					width: 300px;
+			   	}
+			</style>
+		</apex:define>
+		
+	    <apex:define name="pageHeader">
+	    	<apex:sectionHeader title="AT&T Demo" subtitle="AT&T Speech to Email/SMS Demo"/>
+	    </apex:define>
+
+	    <apex:define name="pageBody">
+	        <apex:pageBlock title="Send Request to AT&T Speech Service">
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!testAttServiceSpeech}" value="Recognize and send"/>
+	            </apex:pageBlockButtons>
+	
+	            <apex:pageMessages />
+	            
+	            <apex:pageBlockSection showHeader="false">
+	           		<apex:pageBlockSectionItem >
+	           			<apex:panelGrid columns="2" columnClasses="col1,col2" width="100%">
+	           				<apex:outputLabel value="E-mail address, or phone number:"/>
+		                 	<apex:inputText value="{!targetAddr}" maxlength="320" size="40"/>
+		                 	
+		                 	<apex:outputLabel value="File for recognition:"/>
+	               			<apex:inputFile value="{!fileBlob}" filename="{!filePath}"/>
+	           			</apex:panelGrid>
+	           		</apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>
+	    </apex:define>
+    </apex:composition>
+</apex:page>

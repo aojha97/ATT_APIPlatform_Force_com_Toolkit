@@ -1,0 +1,118 @@
+<apex:page controller="DemoMIMController">
+	<apex:composition template="demo_page_template">
+		<apex:define name="pageHeader">
+	    	<apex:sectionHeader title="AT&T Demo" subtitle="AT&T MIM Service Demo"/>
+	    </apex:define>
+	    
+	    <apex:define name="pageBody">
+	       <apex:pageBlock title="Get Message Headers">        
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!getMessageHeaders}" value="Get Headers"/>
+	            </apex:pageBlockButtons>
+	            
+	            <apex:pageMessages rendered="{!showHeadersMessages}"/>
+	            
+	            <apex:pageBlockSection showHeader="false">
+	            	<apex:panelGrid columns="2">            	
+	            		<apex:outputLabel value="Header Count:" style="white-space: nowrap"/>
+	                    <apex:inputText value="{!headerCount}" size="15"/>
+	                                     	
+	                 	<apex:outputLabel value="Index Cursor:"/>
+	                 	<apex:inputText value="{!indexCursor}" size="15"/>
+	                 	
+						<apex:outputLabel value=""/>
+						<apex:outputLabel value="{!headersDescription}" style="white-space: nowrap; font-weight: bold"/>
+						
+						<apex:outputLabel value=""/>
+	                 	<apex:dataTable value="{!headers}" var="messageHeader" id="headersTable" cellpadding="5" border="1">		
+							<apex:column >				
+							    <apex:facet name="header">Message ID</apex:facet>
+								<apex:outputText value="{!messageHeader.messageId}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">From</apex:facet>
+								<apex:outputText value="{!messageHeader.fromAddress}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">To</apex:facet>
+								<apex:outputText value="{!messageHeader.to}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">Subject</apex:facet>
+								<apex:outputText value="{!messageHeader.subject}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">Received</apex:facet>
+								<apex:outputText value="{!messageHeader.received}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">Text</apex:facet>
+								<apex:outputText value="{!messageHeader.text}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">Favorite</apex:facet>
+								<apex:outputText value="{!messageHeader.favorite}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">Read</apex:facet>
+								<apex:outputText value="{!messageHeader.read}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">Type</apex:facet>
+								<apex:outputText value="{!messageHeader.messageType}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">Direction</apex:facet>
+								<apex:outputText value="{!messageHeader.direction}"/>				
+							</apex:column>
+							<apex:column >				
+								<apex:facet name="header">MmsContent</apex:facet>
+								<apex:dataTable value="{!messageHeader.mmsContent}" var="mms" id="headersTable" cellpadding="5" cellspacing="5" border="0">
+									<apex:column >				
+										<apex:facet name="header">ContentType</apex:facet>
+										<apex:outputText value="{!mms.contentType}"/>
+									</apex:column>
+									<apex:column >				
+										<apex:facet name="header">ContentName</apex:facet>
+										<apex:outputText value="{!mms.contentName}"/>
+									</apex:column>
+									<apex:column >				
+										<apex:facet name="header">PartNumber</apex:facet>
+										<apex:outputText value="{!mms.partNumber}"/>
+									</apex:column>
+								</apex:dataTable>											
+							</apex:column>
+						</apex:dataTable>
+						                 	                                                                	
+	            	</apex:panelGrid>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>
+	        
+	        <apex:pageBlock title="Get Message Content">        
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!getMessageContent}" value="Get Content"/>
+	            </apex:pageBlockButtons>
+	            
+	            <apex:pageMessages rendered="{!showContentMessages}"/>
+	            
+	            <apex:pageBlockSection showHeader="false">
+	            	<apex:panelGrid columns="2">            	
+	            		<apex:outputLabel value="Message ID: " style="white-space: nowrap"/>
+	                    <apex:inputText value="{!messageId}" size="10"/>
+	                    
+	                    <apex:outputLabel value="Part Number: " style="white-space: nowrap"/>
+	                    <apex:inputText value="{!partNumber}" size="10"/>
+	                    
+	                 	<apex:outputLabel value="File Name:"/>
+	                 	<apex:outputLabel value="{!contentFileName}"/>
+	                 	
+	                 	<apex:outputLabel value="Content:"/>
+						<apex:outputLabel rendered="{!isTextContent}" value="{!content}"/>
+						<apex:inputTextArea rendered="{!isApplicationContent}" disabled="true" value="{!content}" cols="100" rows="5"/>					                 	
+	                    <apex:image rendered="{!isImageContent}" value="{!content}" />	                    	                    
+	            	</apex:panelGrid>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>	    
+	    </apex:define>
+    </apex:composition>
+</apex:page>

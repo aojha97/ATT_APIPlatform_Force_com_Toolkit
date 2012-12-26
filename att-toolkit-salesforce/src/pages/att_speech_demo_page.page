@@ -1,0 +1,54 @@
+<apex:page controller="DemoSpeechController">
+    <apex:composition template="demo_page_template">
+	    <apex:define name="pageHeader">
+		    <apex:sectionHeader title="AT&T Demo" subtitle="AT&T Speech Demo"/>
+	    </apex:define>
+
+	    <apex:define name="pageBody">
+	        <apex:pageBlock title="Send Request to AT&T Speech Service">
+	            <apex:pageBlockButtons >
+	                <apex:commandButton action="{!testAttServiceSpeech}" value="Send request"/>
+	            </apex:pageBlockButtons>
+	
+	            <apex:pageMessages />
+	            
+	            <apex:pageBlockSection showHeader="false" columns="1" id="block1">
+	                <apex:pageBlockSectionItem >
+	                  <apex:outputLabel value="File Name" for="fileName"/>
+	                  <apex:inputFile value="{!fileBlob}" filename="{!fileNameReal}" id="fileToUpload"/>                  
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	                  
+	            <apex:pageBlockSection showHeader="false" columns="2" id="block2">
+	                <apex:pageBlockSectionItem >            
+	                    <apex:panelGrid columns="2" id="resultPanel">
+	                        <apex:outputLabel value="Grade" for="resGrade" />
+	                        <apex:inputTextarea readonly="true" value="{!resGrade}" cols="80" rows="1" id="resGrade" />
+	                        
+	                        <apex:outputLabel value="Confidence" for="resConfidence" />
+	                        <apex:inputTextarea readonly="true" value="{!resConfidence}" cols="80" rows="1" id="resConfidence" />
+	 
+	                        <apex:outputLabel value="Language ID" for="resLanguageId" />
+	                        <apex:inputTextarea readonly="true" value="{!resLanguageId}" cols="80" rows="1" id="resLanguageId" />
+	
+	                        <apex:outputLabel value="Hypothesis" for="resHypothesis" />
+	                        <apex:inputTextarea readonly="true" value="{!resHypothesis}" cols="80" rows="10" id="resHypothesis" />
+	
+	                        <apex:outputLabel value="Result text" for="resResultText" />
+	                        <apex:inputTextarea readonly="true" value="{!resResultText}" cols="80" rows="10" id="resResultText" />
+	
+	                        <apex:outputLabel value="Word scores" for="resWordScores" />
+	                        <apex:inputTextarea readonly="true" value="{!resWordScores}" cols="80" rows="4" id="resWordScores" />
+	                    </apex:panelGrid>
+	                </apex:pageBlockSectionItem>
+	                <apex:pageBlockSectionItem >
+	                	<apex:panelGrid columns="2" id="debugPanel">
+	                		<apex:outputLabel value="Response body" for="debugBody" />
+	                    	<apex:inputTextarea readonly="true" value="{!debugBody}" cols="80" rows="10" id="debugBody" />
+	                    </apex:panelGrid>	
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+	        </apex:pageBlock>      
+	    </apex:define>
+    </apex:composition>
+</apex:page>
